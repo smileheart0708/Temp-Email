@@ -1,0 +1,47 @@
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.packages
+build/
+*.iml
+
+# Android specific
+android/.gradle/
+android/local.properties
+android/key.properties
+android/app/build/
+android/app/.cxx/
+android/app/.externalNativeBuild/
+
+# iOS specific
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+ios/.build/
+
+# macOS specific (if applicable)
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/Runner/GeneratedPluginRegistrant.swift
+
+# Windows specific (if applicable)
+windows/flutter/generated_plugins.cmake
+
+# Linux specific (if applicable)
+linux/flutter/generated_plugins.cmake
+
+# Web specific (if applicable)
+# web/flutter_service_worker.js
+# web/manifest.json
+
+# IDE specific
+.idea/
+.vscode/
+*.code-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
