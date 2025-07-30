@@ -1,0 +1,24 @@
+name: email
+description: "A new Flutter email."
+publish_to: 'none'
+version: 2.3.5+35
+environment:
+  sdk: ^3.8.1
+dependencies:
+  flutter:
+    sdk: flutter
+  path_provider: ^2.1.5
+  http: ^1.4.0
+  flutter_lints: ^6.0.0
+  dynamic_color: ^1.7.0
+  webview_flutter: ^4.8.0
+  intl: ^0.20.2
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+flutter:
+  uses-material-design: true
