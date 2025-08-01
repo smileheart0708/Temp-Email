@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../../models/email_message.dart';
 import 'base_provider.dart';
 
-/// An implementation of [EmailProvider] for the 'apiok.us' service.
-class ApiOkProvider implements EmailProvider {
+/// An implementation of [EmailProvider] for the 'idataiver.com' service.
+class IdataiverProvider implements EmailProvider {
+  // Note: The URLs are kept from the original 'apiok.us' as per the code.
+  // If the service URL also changes, these should be updated.
   static const String _messagesUrl = 'https://apiok.us/api/cbea/messages/v1';
   static const String _messageDetailUrl =
       'https://apiok.us/api/cbea/message/detail/v1';

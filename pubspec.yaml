@@ -1,7 +1,7 @@
 name: email
-description: "A new Flutter email."
+description: "A  Flutter Temp_email."
 publish_to: 'none'
-version: 2.3.5+35
+version: 2.4.0+37
 environment:
   sdk: ^3.8.1
 dependencies:
@@ -12,6 +12,7 @@ dependencies:
   flutter_lints: ^6.0.0
   dynamic_color: ^1.7.0
   webview_flutter: ^4.8.0
+  webview_flutter_android: ^4.7.0
   intl: ^0.20.2
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.1

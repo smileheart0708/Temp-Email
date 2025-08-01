@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +13,17 @@ class StorageService {
   late SharedPreferences _prefs;
 
   // Constants for storage keys to avoid typos
-  static const String _apiKey = 'api_key';
-  static const String _requestUrl = 'request_url';
+  // --- Deprecated Keys ---
+  // static const String _apiKey = 'api_key'; // Replaced by _idataiverApiKey
+  // static const String _requestUrl = 'request_url'; // No longer used
+
+  // --- New Email Service Keys ---
+  static const String _idataiverApiKey = 'idataiver_api_key';
+  static const String _providerSuffixes = 'provider_suffixes_'; // Prefix, e.g., provider_suffixes_Mailcx
+  static const String _suffixSelectionMode = 'suffix_selection_mode';
+  static const String _fixedSuffixSelection = 'fixed_suffix_selection';
+
+  // --- Existing Keys ---
   static const String _hapticEnabled = 'haptic_enabled';
   static const String _themeMode = 'theme_mode';
   static const String _dynamicColor = 'dynamic_color';
@@ -29,28 +39,51 @@ class StorageService {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  Future<String?> getApiKey() async {
-    return _prefs.getString(_apiKey);
+  // --- Idataiver API Key ---
+  Future<String?> getIdataiverApiKey() async {
+    return _prefs.getString(_idataiverApiKey);
   }
 
-  Future<void> saveApiKey(String apiKey) async {
-    await _prefs.setString(_apiKey, apiKey);
+  Future<void> saveIdataiverApiKey(String apiKey) async {
+    await _prefs.setString(_idataiverApiKey, apiKey);
   }
 
-  Future<void> deleteApiKey() async {
-    await _prefs.remove(_apiKey);
+  Future<void> deleteIdataiverApiKey() async {
+    await _prefs.remove(_idataiverApiKey);
   }
 
-  Future<String?> getRequestUrl() async {
-    return _prefs.getString(_requestUrl);
+  // --- Provider Suffix Settings ---
+  Future<void> saveProviderSuffixes(String providerName, List<Map<String, dynamic>> suffixes) async {
+    final key = '$_providerSuffixes$providerName';
+    await _prefs.setString(key, json.encode(suffixes));
   }
 
-  Future<void> saveRequestUrl(String url) async {
-    await _prefs.setString(_requestUrl, url);
+  Future<List<Map<String, dynamic>>?> getProviderSuffixes(String providerName) async {
+    final key = '$_providerSuffixes$providerName';
+    final jsonString = _prefs.getString(key);
+    if (jsonString != null) {
+      return (json.decode(jsonString) as List).cast<Map<String, dynamic>>();
+    }
+    return null;
   }
 
-  Future<void> deleteRequestUrl() async {
-    await _prefs.remove(_requestUrl);
+  // --- Suffix Selection Mode ---
+  Future<void> saveSuffixSelectionMode(String mode) async {
+    await _prefs.setString(_suffixSelectionMode, mode);
+  }
+
+  Future<String> getSuffixSelectionMode() async {
+    // Default to 'fixed'
+    return _prefs.getString(_suffixSelectionMode) ?? 'fixed';
+  }
+
+  // --- Fixed Suffix Selection ---
+  Future<void> saveFixedSuffixSelection(String suffix) async {
+    await _prefs.setString(_fixedSuffixSelection, suffix);
+  }
+
+  Future<String?> getFixedSuffixSelection() async {
+    return _prefs.getString(_fixedSuffixSelection);
   }
 
   Future<bool> getHapticFeedbackEnabled() async {

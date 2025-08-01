@@ -141,6 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _handleGetEmail() async {
+    // The logic to check for and prompt for an API key has been removed.
+    // The main screen now just triggers the email generation process.
+    await _emailService.getTempEmail();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -192,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state, child) {
                 final isLoading = state.status == EmailGenerationStatus.loading;
                 return FilledButton.tonal(
-                  onPressed: isLoading ? null : _emailService.getTempEmail,
+                  onPressed: isLoading ? null : _handleGetEmail,
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
