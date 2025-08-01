@@ -4,6 +4,7 @@ Thumbs.db
 *.iml
 *.ipr
 *.iws
+*.bat
 
 # IDE specific
 .idea/
