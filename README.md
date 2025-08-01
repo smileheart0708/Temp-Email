@@ -1,16 +1,55 @@
-# email
+# Temp_Email
 
-A new Flutter project.
+一个提供临时邮箱和随机密码生成功能的 Flutter 应用程序。
 
-## Getting Started
+## 软件功能
 
-This project is a starting point for a Flutter application.
+1.  **临时邮箱生成与管理：**
+    *   获取临时邮箱，并支持多种邮箱后缀名。
+    *   可以选择邮箱生成模式
+    *   支持不同的邮件服务提供商（目前包括 Mailcx 和 Idataiver），其中 Idataiver 需要 API Key。
+    *   生成的邮箱地址可以一键复制到剪贴板。
 
-A few resources to get you started if this is your first Flutter project:
+2.  **邮件接收与查看：**
+    *   可以查看临时邮箱收到的邮件列表，并支持下拉刷新。
+    *   点击邮件可查看邮件详情，邮件内容通过 WebView 加载。
+    *   邮件详情页会自动识别并提取邮件中的6位数字或字母验证码，并提供一键复制功能。
+    *   加载邮件详情时会显示加载指示器，并处理加载失败的情况，提供错误日志复制功能。
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+3.  **随机密码生成器：**
+    *   提供一个可配置的随机密码生成器，可以设置密码长度
+    *   可选择包含数字、字母（支持混合大小写）和特殊符号。
+    *   生成的密码可以一键复制到剪贴板。
+    *   密码生成设置会自动保存。
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+4.  **个性化设置：**
+    *   **主题设置：** 支持跟随系统、浅色模式和深色模式。
+    *   **动态取色：** 在支持的设备上，根据壁纸颜色生成应用主题色。
+    *   **触感反馈：** 控制应用交互时的震动反馈。
+    *   **邮箱后缀管理：** 用户可以启用或禁用不同的邮箱后缀名，并配置邮箱生成模式。
+    *   **API Key 管理：** 对于需要 API Key 的邮箱服务提供商，用户可以设置和管理其 API Key。
+
+
+## 技术栈
+
+1.  **开发框架：** Flutter
+2.  **编程语言：** Dart
+3.  **UI/UX：**
+    *   Material Design 3
+    *   `dynamic_color` 包
+    *   `webview_flutter` 包
+4.  **状态管理：**
+    *   `ValueNotifier`
+    *   单例模式
+5.  **数据存储：**
+    *   `shared_preferences` 包
+    *   文件系统 (`path_provider`)
+6.  **网络请求：**
+    *   通过 `EmailProvider` 抽象层与不同的邮件服务提供商进行交互。
+7.  **系统集成：**
+    *   `flutter/services.dart` (剪贴板操作)
+    *   `url_launcher` 包 (打开外部链接)
+    *   `HapticFeedback` (触感反馈)
+8.  **其他：**
+    *   `intl` 包 (日期时间格式化)
+    *   正则表达式 (`RegExp`)
