@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:email/models/email_message.dart';
-import 'package:email/services/providers/idataiver_provider.dart';
 import 'package:email/services/providers/mailcx_provider.dart';
 import 'package:email/services/providers/base_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -43,7 +42,6 @@ class EmailService {
 
   void _registerProviders() {
     _providers['Mailcx'] = MailcxProvider();
-    _providers['Idataiver'] = IdataiverProvider();
   }
 
   // --- State Notifiers ---
@@ -79,13 +77,7 @@ class EmailService {
             .toList() ??
         ['qabq.com', 'nqmo.com', 'end.tw', 'uuf.me', '6n9.net'];
 
-    final idataiverSuffixes = (await _storage.getProviderSuffixes('Idataiver'))
-            ?.where((s) => s['isEnabled'] as bool? ?? true)
-            .map((s) => s['value'] as String)
-            .toList() ??
-        []; // Assume empty by default until set in settings
-
-    _activeSuffixPool = {...mailCxSuffixes, ...idataiverSuffixes}.toList()..sort();
+    _activeSuffixPool = {...mailCxSuffixes}.toList()..sort();
     
     if (_activeSuffixPool.isNotEmpty && _fixedSelection == null) {
       _fixedSelection = _activeSuffixPool.first;
@@ -157,13 +149,8 @@ class EmailService {
   }
 
   EmailProvider _getProviderForEmail(String email) {
-    final domain = email.split('@').last;
-    // This is a simplified lookup. A more robust solution might map
-    // each suffix to its provider explicitly in storage.
-    if (['qabq.com', 'nqmo.com', 'end.tw', 'uuf.me', '6n9.net'].contains(domain)) {
-      return _providers['Mailcx']!;
-    }
-    return _providers['Idataiver']!;
+    // Since we only have one provider now, we can just return it.
+    return _providers['Mailcx']!;
   }
 
   Future<void> refreshMessages() async {
@@ -175,8 +162,8 @@ class EmailService {
 
     try {
       final provider = _getProviderForEmail(currentEmailId);
-      final apiKey = await _storage.getIdataiverApiKey() ?? ''; // Pass empty for Mailcx
-      final fetchedMessages = await provider.getMessages(apiKey, currentEmailId);
+      // The apiKey is no longer needed as MailcxProvider ignores it.
+      final fetchedMessages = await provider.getMessages('', currentEmailId);
       messages.value = fetchedMessages;
     } catch (e) {
       final errorMessage = '获取邮件列表失败: ${e.toString().replaceAll('Exception: ', '')}';
@@ -205,12 +192,11 @@ class EmailService {
       }
 
       final provider = _getProviderForEmail(currentEmail);
-      final apiKey = await _storage.getIdataiverApiKey() ?? '';
-      
+      // The apiKey is no longer needed.
       // For Mailcx, the messageId needs to be 'email/mailId'
-      final providerMessageId = provider is MailcxProvider ? '$currentEmail/$messageId' : messageId;
+      final providerMessageId = '$currentEmail/$messageId';
 
-      final htmlContent = await provider.getMessageDetail(apiKey, providerMessageId);
+      final htmlContent = await provider.getMessageDetail('', providerMessageId);
 
       await cachedFile.writeAsString(htmlContent);
       await _manageCache();

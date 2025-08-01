@@ -119,7 +119,6 @@ class _SettingPageState extends State<SettingPage> {
   final _activeSuffixPool = ValueNotifier<List<String>>([]);
   final _selectionMode = ValueNotifier<String>('fixed');
   final _fixedSelection = ValueNotifier<String?>(null);
-  final _idataiverApiKey = ValueNotifier<String?>(null);
 
   // ExpansionTile controllers
   final Map<String, bool> _expansionState = {};
@@ -138,7 +137,6 @@ class _SettingPageState extends State<SettingPage> {
     _activeSuffixPool.dispose();
     _selectionMode.dispose();
     _fixedSelection.dispose();
-    _idataiverApiKey.dispose();
     _themeService.removeListener(_onThemeSettingsChanged);
     _hapticService.removeListener(_onHapticSettingsChanged);
     super.dispose();
@@ -150,7 +148,6 @@ class _SettingPageState extends State<SettingPage> {
   Future<void> _loadAllSettings() async {
     // --- Load Provider Configurations ---
     final mailcxSuffixData = await _storage.getProviderSuffixes('Mailcx');
-    final idataiverSuffixData = await _storage.getProviderSuffixes('Idataiver');
 
     final mailcxProvider = EmailProviderModel(
       name: 'Mailcx',
@@ -165,22 +162,10 @@ class _SettingPageState extends State<SettingPage> {
           ],
     );
 
-    final idataiverProvider = EmailProviderModel(
-      name: 'Idataiver',
-      requiresApiKey: true,
-      suffixes: idataiverSuffixData?.map((d) => EmailSuffix.fromMap(d)).toList() ??
-          [
-            // Placeholder suffixes for Idataiver
-            EmailSuffix(value: 'uselesss.org'),
-          ],
-    );
-
-    _providers.value = [mailcxProvider, idataiverProvider];
+    _providers.value = [mailcxProvider];
     _expansionState['Mailcx'] = true; // Default Mailcx to be expanded
-    _expansionState['Idataiver'] = false;
 
     // --- Load other settings ---
-    _idataiverApiKey.value = await _storage.getIdataiverApiKey();
     _selectionMode.value = await _storage.getSuffixSelectionMode();
     _fixedSelection.value = await _storage.getFixedSuffixSelection();
 
@@ -258,44 +243,6 @@ class _SettingPageState extends State<SettingPage> {
     await _emailService.reloadSettings();
   }
 
-  void _showIdataiverApiKeyDialog() {
-    _hapticService.lightImpact();
-    final controller = TextEditingController(text: _idataiverApiKey.value);
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('设置 API Key'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(
-              labelText: 'API Key',
-              hintText: '在此输入您的 Idataiver API Key',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('取消'),
-            ),
-            FilledButton(
-              onPressed: () async {
-                if (controller.text.isEmpty) return;
-                final newKey = controller.text;
-                await _storage.saveIdataiverApiKey(newKey);
-                _idataiverApiKey.value = newKey;
-                if (!context.mounted) return;
-                Navigator.of(context).pop();
-              },
-              child: const Text('保存'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -438,17 +385,6 @@ class _SettingPageState extends State<SettingPage> {
           });
         },
         children: [
-          if (provider.requiresApiKey)
-            ListTile(
-              title: const Text('API Key'),
-              subtitle: ValueListenableBuilder<String?>(
-                valueListenable: _idataiverApiKey,
-                builder: (context, key, child) {
-                  return Text(key != null && key.isNotEmpty ? '已设置' : '点击设置');
-                },
-              ),
-              onTap: _showIdataiverApiKeyDialog,
-            ),
           ...provider.suffixes.map((suffix) {
             return SwitchListTile(
               title: Text(suffix.value),

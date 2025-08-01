@@ -18,7 +18,6 @@ class StorageService {
   // static const String _requestUrl = 'request_url'; // No longer used
 
   // --- New Email Service Keys ---
-  static const String _idataiverApiKey = 'idataiver_api_key';
   static const String _providerSuffixes = 'provider_suffixes_'; // Prefix, e.g., provider_suffixes_Mailcx
   static const String _suffixSelectionMode = 'suffix_selection_mode';
   static const String _fixedSuffixSelection = 'fixed_suffix_selection';
@@ -39,18 +38,6 @@ class StorageService {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  // --- Idataiver API Key ---
-  Future<String?> getIdataiverApiKey() async {
-    return _prefs.getString(_idataiverApiKey);
-  }
-
-  Future<void> saveIdataiverApiKey(String apiKey) async {
-    await _prefs.setString(_idataiverApiKey, apiKey);
-  }
-
-  Future<void> deleteIdataiverApiKey() async {
-    await _prefs.remove(_idataiverApiKey);
-  }
 
   // --- Provider Suffix Settings ---
   Future<void> saveProviderSuffixes(String providerName, List<Map<String, dynamic>> suffixes) async {
